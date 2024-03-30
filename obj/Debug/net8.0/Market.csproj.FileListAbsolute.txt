@@ -573,3 +573,4 @@ D:\Ba Nam\Own project\Practice\c#\Market\obj\Debug\net8.0\refint\Market.dll
 D:\Ba Nam\Own project\Practice\c#\Market\obj\Debug\net8.0\Market.pdb
 D:\Ba Nam\Own project\Practice\c#\Market\obj\Debug\net8.0\Market.genruntimeconfig.cache
 D:\Ba Nam\Own project\Practice\c#\Market\obj\Debug\net8.0\ref\Market.dll
+D:\Ba Nam\Own project\Practice\c#\Market\bin\Debug\net8.0\X.PagedList.Web.Common.dll
