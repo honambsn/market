@@ -1,4 +1,5 @@
 using Market.Models;
+using Market.Models.Authentication;
 using Market.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,8 @@ namespace Market.Controllers
         {
             _logger = logger;
         }
-
+        
+        [Authentication]
         public IActionResult Index(int? page )
         {
 

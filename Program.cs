@@ -11,7 +11,7 @@ var connecttionSring = builder.Configuration.GetConnectionString("QlvaLiContext"
 builder.Services.AddDbContext<QlvaLiContext>(x => x.UseSqlServer(connecttionSring));
 
 builder.Services.AddScoped<ILoaiSpRepository,LoaiSpRepository>();
-
+builder.Services.AddSession();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -28,9 +28,13 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseSession();
 
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Access}/{action=Login}/{id?}");
 
 app.Run();
