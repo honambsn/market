@@ -1,6 +1,7 @@
 ﻿using Azure;
 using Market.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList;
 
@@ -29,5 +30,84 @@ namespace Market.Areas.Admin.Controllers
             PagedList<TDanhMucSp> lst = new PagedList<TDanhMucSp>(list_spham, pageNumber, pageSize);
             return View(lst);
         }
+        //Add new Product
+        [Route("ThemSanPhamMoi")]
+        [HttpGet]
+        public  IActionResult ThemSanPhamMoi()
+        {
+            ViewBag.MaChatLieu = new SelectList(db.TChatLieus.ToList(), "MaChatLieu", "ChatLieu");
+            ViewBag.MaHangSx = new SelectList(db.THangSxes.ToList(), "MaHangSx", "HangSx");
+            ViewBag.MaNuocSx = new SelectList(db.TQuocGia.ToList(), "MaNuoc", "TenNuoc");
+            ViewBag.MaLoai = new SelectList(db.TLoaiSps.ToList(), "MaLoai", "Loai");
+            ViewBag.MaDt = new SelectList(db.TLoaiDts.ToList(), "MaDt", "TenLoai");
+            return View();
+
+        }
+
+        [Route("ThemSanPhamMoi")]
+        [HttpPost]
+        [ValidateAntiForgeryTokenAttribute]
+        public IActionResult ThemSanPham(TDanhMucSp sanPham) 
+        {
+            if(ModelState.IsValid)
+            {
+                db.TDanhMucSps.Add(sanPham);
+                db.SaveChanges();
+                return RedirectToAction("DanhMucSanPham");
+            }
+            else
+            return View(sanPham);
+        }
+
+
+        [Route("SuaSanPham")]
+        [HttpGet]
+        public IActionResult SuaSanPham(string maSanPham)
+        {
+            ViewBag.MaChatLieu = new SelectList(db.TChatLieus.ToList(), "MaChatLieu", "ChatLieu");
+            ViewBag.MaHangSx = new SelectList(db.THangSxes.ToList(), "MaHangSx", "HangSx");
+            ViewBag.MaNuocSx = new SelectList(db.TQuocGia.ToList(), "MaNuoc", "TenNuoc");
+            ViewBag.MaLoai = new SelectList(db.TLoaiSps.ToList(), "MaLoai", "Loai");
+            ViewBag.MaDt = new SelectList(db.TLoaiDts.ToList(), "MaDt", "TenLoai");
+            var sanPham = db.TDanhMucSps.Find(maSanPham);
+            return View(sanPham);
+
+        }
+
+        [Route("SuaSanPham")]
+        [HttpPost]
+        [ValidateAntiForgeryTokenAttribute]
+        public IActionResult SuaSanPham(TDanhMucSp sanPham)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Update(sanPham);
+                //db.Entry(sanPham).State = EntityState.Modified; another way but using modify
+                db.SaveChanges();
+                return RedirectToAction("DanhMucSanPham");
+            }
+            return View(sanPham);
+        }
+
+        [Route("XoaSanPham")]
+        [HttpGet]
+        public IActionResult XoaSanPham(string maSanPham)
+        {
+            TempData["Message"] = "";
+            var sanPham_details = db.TChiTietSanPhams.Where(x => x.MaSp == maSanPham).ToList();
+            if (sanPham_details.Count() > 0) 
+            {
+                TempData["Message"] = "Cant delete this product";
+                return RedirectToAction("DanhMucSanPham", "HomeAdmin");
+            }
+            var anhSanPhams = db.TAnhSps.Where(x => x.MaSp==maSanPham);
+            if (anhSanPhams.Any()) db.RemoveRange(anhSanPhams);
+            db.Remove(db.TDanhMucSps.Find(maSanPham));
+            db.SaveChanges();
+            TempData["Message"] = "Deleted product";
+            return RedirectToAction("DanhMucSanPham", "HomeAdmin");
+            
+        }
+
     }
 }
