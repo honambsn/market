@@ -9,26 +9,26 @@ namespace Market.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            if(HttpContext.Session.GetString("UserName")==null)
+            if (HttpContext.Session.GetString("UserName") == null)
             {
                 return View();
             }
             else
             {
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
         }
 
         [HttpPost]
         public IActionResult Login(TUser user)
         {
-            if (HttpContext.Session.GetString("UserName")==null)
+            if (HttpContext.Session.GetString("UserName") == null)
             {
-                var u = db.TUsers.Where(x=>x.Username.Equals(user.Username) && x.Password.Equals(user.Password)).FirstOrDefault();
-                if (u != null )
+                var u = db.TUsers.Where(x => x.Username.Equals(user.Username) && x.Password.Equals(user.Password)).FirstOrDefault();
+                if (u != null)
                 {
-                    if (u.LoaiUser ==0)
-                    { 
+                    if (u.LoaiUser == 0)
+                    {
                         HttpContext.Session.SetString("UserName", u.Username.ToString());
                         return RedirectToAction("Index", "Home");
                     }
@@ -39,7 +39,7 @@ namespace Market.Controllers
 
                     }
                 }
-                
+
             }
             return View();
         }
@@ -50,5 +50,50 @@ namespace Market.Controllers
             HttpContext.Session.Remove("UserName");
             return RedirectToAction("Login", "Access");
         }
+
+        [Route("Register")]
+        [HttpGet]
+        public IActionResult Register()
+        { 
+            //if (HttpContext.Session.GetString("UserName") == null)
+            //{
+            //    return View();
+            //}
+            //else
+            //{
+            //    return RedirectToAction("Login");
+            //}
+
+            return View();
+        }
+
+        [Route("Register")]
+        [HttpPost]
+        public IActionResult Register(TUser user)
+        {
+            TempData["Message"] = "";
+            if (ModelState.IsValid)
+            {
+
+                db.TUsers.Add(user);
+                db.SaveChanges();
+                TempData["Message"] = "ok";
+
+            }
+
+            try
+            {
+                return View(user);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            return View(user);
+
+        }
+
+
+
     }
 }

@@ -55,7 +55,7 @@ namespace Market.Areas.Admin.Controllers
                 db.SaveChanges();
                 return RedirectToAction("DanhMucSanPham");
             }
-            else
+            
             return View(sanPham);
         }
 
